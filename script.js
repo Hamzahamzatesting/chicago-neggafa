@@ -203,15 +203,33 @@ function _unlockOnce() {
 })();
 
 /* ─── LOADER ─── */
-window.addEventListener('load', () => {
+(function () {
   const loader = document.getElementById('loader');
-  setTimeout(() => {
+  if (!loader) return;
+  const t0 = Date.now();
+  const MIN = 3800; // animation needs this long
+  const MAX = 7000; // never block longer than this on slow connections
+
+  function dismiss() {
+    if (loader.classList.contains('hidden')) return;
     loader.classList.add('hidden');
     document.body.classList.remove('loading');
-    // Hero is now visible — this is the reliable moment to force play
     forceHeroVideos();
-  }, 3800);
-});
+  }
+
+  // Hard minimum — always show the full animation
+  setTimeout(dismiss, MIN);
+
+  // Hard maximum — never block past 7s no matter how slow the connection
+  setTimeout(dismiss, MAX);
+
+  // If the page finishes loading after the minimum, dismiss immediately
+  window.addEventListener('load', () => {
+    const elapsed = Date.now() - t0;
+    if (elapsed >= MIN) dismiss();
+    // else the MIN setTimeout above will fire it
+  });
+})();
 
 /* ─── CUSTOM CURSOR ─── */
 const cursorRing = document.querySelector('.cursor__ring');
