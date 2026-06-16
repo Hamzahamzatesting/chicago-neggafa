@@ -1374,10 +1374,10 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
 /* ─── Lhenna Dark-to-Light Entrance ─── */
 .lhenna__dark-veil {
   position: absolute; inset: 0;
-  background: rgba(4,10,6,0.92);
+  background: rgba(4,10,6,0.40);
   z-index: 8;
   pointer-events: none;
-  transition: opacity 3.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: opacity 1.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 .lhenna--lit .lhenna__dark-veil { opacity: 0; }
 
@@ -4212,4 +4212,91 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
 .hero__gold-dust--ember {
   background: radial-gradient(circle, rgba(255,155,45,var(--op,0.22)) 0%, transparent 68%);
   animation-duration: calc(var(--dur, 9s) * 0.62);
+}
+
+/* ═══════════════════════════════════════════════
+   MOBILE HERO — FINAL AUTHORITY (max-width: 640px)
+   Overrides all earlier conflicting rules
+   ═══════════════════════════════════════════════ */
+@media (max-width: 640px) {
+
+  /* ── Arch: proportional, not too tall ── */
+  .hero__arch-panel--left,
+  .hero__arch-panel--right,
+  .hero__arch-divider-center { display: none !important; }
+
+  .hero__arch-panel--center {
+    width: min(220px, 60vw) !important;
+    height: clamp(250px, 42vh, 330px) !important;
+  }
+
+  /* ── Title: balanced, none of the words dominates ── */
+  .hero__top {
+    top: calc(var(--nav-h) + 0.5rem) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 1.2rem !important;
+    text-align: center !important;
+  }
+  .hero__top .hero__title {
+    font-size: clamp(1.5rem, 7vw, 2rem) !important;
+    line-height: 1.05 !important;
+    letter-spacing: 0 !important;
+  }
+  .hero__top .hero__title .italic {
+    font-size: clamp(2rem, 9vw, 2.8rem) !important;
+    display: block;
+  }
+  .hero__top .hero__title .word:nth-child(1),
+  .hero__top .hero__title .word:nth-child(3) {
+    font-size: clamp(1.1rem, 5vw, 1.5rem) !important;
+    letter-spacing: 0.22em !important;
+    display: block;
+  }
+  .hero__eyebrow {
+    font-size: 0.60rem !important;
+    letter-spacing: 0.28em !important;
+  }
+
+  /* ── Bottom: perfectly centered, stacked buttons ── */
+  .hero__bottom {
+    position: absolute !important;
+    bottom: 1.5rem !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    width: min(300px, 86vw) !important;
+    max-width: none !important;
+    padding: 0 !important;
+    text-align: center !important;
+  }
+  .hero__bottom .hero__subtitle {
+    font-size: 0.58rem !important;
+    letter-spacing: 0.06em !important;
+    margin-bottom: 1rem !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .hero__bottom .hero__actions {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.55rem !important;
+    width: 100% !important;
+  }
+  .hero__bottom .hero__actions .btn {
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+    padding: 0.88rem 1rem !important;
+    font-size: 0.70rem !important;
+    letter-spacing: 0.12em !important;
+    white-space: nowrap !important;
+  }
+
+  /* ── Hide scroll cue — no room ── */
+  .hero__scroll-cue { display: none !important; }
 }

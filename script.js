@@ -825,13 +825,15 @@ document.querySelectorAll('.hero__arch-panel video').forEach(v => {
 (function initLhennaLightUp() {
   const section = document.querySelector('.lhenna');
   if (!section) return;
+  // Add lit class immediately on first pixel of visibility
+  section.classList.add('lhenna--lit');
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (!e.isIntersecting) return;
-      setTimeout(() => section.classList.add('lhenna--lit'), 200);
+      section.classList.add('lhenna--lit');
       obs.disconnect();
     });
-  }, { threshold: 0.12 });
+  }, { threshold: 0.02 });
   obs.observe(section);
 })();
 
