@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chicago Neggafa — Moroccan Bridal Experience</title>
+  <meta name="description" content="Chicago's premier Moroccan bridal experience. Caftans, Takchitas, handcrafted jewelry, Laylat Lhenna setups &amp; 3ammariyas." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20" />
+</head>
+<body class="loading">
+
+<!-- Site-wide twinkling star field -->
+<canvas id="site-stars" aria-hidden="true"></canvas>
+
+<!-- SCROLL PROGRESS -->
+<div id="progress" aria-hidden="true"></div>
+
+<!-- GRAIN OVERLAY -->
+<div class="grain" aria-hidden="true"></div>
+
+<!-- LOADER -->
+<div id="loader" aria-hidden="true">
+
+  <!-- Midnight sky background -->
+  <div class="ldr-bg"></div>
+
+  <!-- Stars + gold dust (shared canvas) -->
+  <canvas class="ldr-particles" aria-hidden="true"></canvas>
+
+  <!-- Warm floor glow — candlelight from below -->
+  <div class="ldr-floor-glow"></div>
+
+  <!-- THE MOROCCAN ARCH — full screen, pointed horseshoe -->
+  <svg class="ldr-arch" viewBox="0 0 500 760" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <!-- Amber candlelight inside arch opening -->
+      <radialGradient id="ldrAmber" cx="50%" cy="72%" r="62%">
+        <stop offset="0%"   stop-color="#D4900A" stop-opacity="0.65"/>
+        <stop offset="25%"  stop-color="#8A5008" stop-opacity="0.35"/>
+        <stop offset="55%"  stop-color="#3C1C04" stop-opacity="0.14"/>
+        <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+      </radialGradient>
+      <!-- Deep teal-stone arch frame -->
+      <linearGradient id="ldrStone" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#0B1C14" stop-opacity="0.99"/>
+        <stop offset="50%"  stop-color="#081410" stop-opacity="0.99"/>
+        <stop offset="100%" stop-color="#050C08" stop-opacity="1"/>
+      </linearGradient>
+      <!-- Warm left-edge highlight -->
+      <linearGradient id="ldrHL" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#A06828" stop-opacity="0.28"/>
+        <stop offset="45%"  stop-color="#704010" stop-opacity="0.10"/>
+        <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+      </linearGradient>
+      <!-- Corner vignette -->
+      <radialGradient id="ldrVig" cx="50%" cy="50%" r="70%">
+        <stop offset="0%"   stop-color="#000" stop-opacity="0"/>
+        <stop offset="55%"  stop-color="#020A06" stop-opacity="0.22"/>
+        <stop offset="100%" stop-color="#010502" stop-opacity="0.97"/>
+      </radialGradient>
+      <!-- Gold glow filter -->
+      <filter id="ldrGF" x="-25%" y="-25%" width="150%" height="150%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <!-- Soft halo blur -->
+      <filter id="ldrHalo" x="-80%" y="-80%" width="260%" height="260%">
+        <feGaussianBlur stdDeviation="16"/>
+      </filter>
+    </defs>
+
+    <!-- ARCH FRAME — evenodd creates transparent pointed arch opening -->
+    <!-- Pointed Moroccan horseshoe arch: legs at x=140 & x=360, spring y=445, apex (250,178) -->
+    <path class="ldr-arch__frame"
+      fill-rule="evenodd" fill="url(#ldrStone)"
+      d="M 0,0 H 500 V 760 H 0 Z
+         M 140,760 L 140,445 C 140,305 198,195 250,178 C 302,195 360,305 360,445 L 360,760 Z"/>
+
+    <!-- Warm stone highlight -->
+    <path class="ldr-arch__frame-hl"
+      fill-rule="evenodd" fill="url(#ldrHL)"
+      d="M 0,0 H 500 V 760 H 0 Z
+         M 140,760 L 140,445 C 140,305 198,195 250,178 C 302,195 360,305 360,445 L 360,760 Z"/>
+
+    <!-- Edge vignette on frame -->
+    <path class="ldr-arch__frame-vig"
+      fill-rule="evenodd" fill="url(#ldrVig)"
+      d="M 0,0 H 500 V 760 H 0 Z
+         M 140,760 L 140,445 C 140,305 198,195 250,178 C 302,195 360,305 360,445 L 360,760 Z"/>
+
+    <!-- Warm candlelight through arch -->
+    <path class="ldr-arch__opening-glow"
+      d="M 140,760 L 140,445 C 140,305 198,195 250,178 C 302,195 360,305 360,445 L 360,760 Z"
+      fill="url(#ldrAmber)"/>
+
+    <!-- Blurred amber halo behind gold line -->
+    <path class="ldr-arch__halo"
+      d="M 140,760 L 140,445 C 140,305 198,195 250,178 C 302,195 360,305 360,445 L 360,760"
+      stroke="#C9902A" stroke-width="16"
+      filter="url(#ldrHalo)" opacity="0"/>
+
+    <!-- Main gold arch line — draws from apex down both sides -->
+    <path class="ldr-arch__outer"
+      d="M 140,760 L 140,445 C 140,305 198,195 250,178 C 302,195 360,305 360,445 L 360,760"
+      stroke="#C9A96E" stroke-width="1.6"
+      filter="url(#ldrGF)"
+      stroke-dasharray="1340" stroke-dashoffset="1340"/>
+
+    <!-- Inner arch line — subtle depth -->
+    <path class="ldr-arch__inner"
+      d="M 153,760 L 153,449 C 154,316 208,210 250,194 C 292,210 346,316 347,449 L 347,760"
+      stroke="#C9A96E" stroke-width="0.5" opacity="0.32"
+      stroke-dasharray="1280" stroke-dashoffset="1280"/>
+
+    <!-- IMPOST BAND — horizontal line where arch meets legs -->
+    <line class="ldr-arch__impost"
+      x1="124" y1="445" x2="376" y2="445"
+      stroke="#C9A96E" stroke-width="0.75" opacity="0"/>
+    <rect class="ldr-arch__impost-gem" x="119" y="440" width="10" height="10"
+      transform="rotate(45 124 445)"
+      fill="rgba(201,169,110,0.10)" stroke="#C9A96E" stroke-width="0.65" opacity="0"/>
+    <rect class="ldr-arch__impost-gem" x="371" y="440" width="10" height="10"
+      transform="rotate(45 376 445)"
+      fill="rgba(201,169,110,0.10)" stroke="#C9A96E" stroke-width="0.65" opacity="0"/>
+
+    <!-- MUQARNAS / STALACTITE FAN at pointed apex -->
+    <g class="ldr-arch__muqarnas" opacity="0">
+      <!-- Apex gem -->
+      <rect x="246" y="172" width="8" height="8" transform="rotate(45 250 176)"
+        fill="#C9A96E" opacity="0.85"/>
+      <circle cx="250" cy="176" r="1.8" fill="#FAF6EE" opacity="0.90"/>
+      <!-- Central stalactite niche -->
+      <polygon points="250,178 235,215 265,215"
+        fill="rgba(201,169,110,0.07)" stroke="#C9A96E" stroke-width="0.65"/>
+      <polygon points="250,188 242,215 258,215"
+        fill="rgba(201,169,110,0.10)" stroke="#C9A96E" stroke-width="0.45"/>
+      <!-- Second tier -->
+      <polygon points="235,215 222,240 248,240"
+        fill="rgba(201,169,110,0.05)" stroke="#C9A96E" stroke-width="0.60"/>
+      <polygon points="265,215 252,240 278,240"
+        fill="rgba(201,169,110,0.05)" stroke="#C9A96E" stroke-width="0.60"/>
+      <!-- Third tier -->
+      <polygon points="222,240 212,260 232,260"
+        fill="none" stroke="#C9A96E" stroke-width="0.50" opacity="0.55"/>
+      <polygon points="278,240 268,260 288,260"
+        fill="none" stroke="#C9A96E" stroke-width="0.50" opacity="0.55"/>
+      <!-- Muqarnas base line -->
+      <line x1="209" y1="260" x2="291" y2="260"
+        stroke="#C9A96E" stroke-width="0.55" opacity="0.50"/>
+    </g>
+
+    <!-- ZELLIGE ACCENT DOTS along inner arch edge -->
+    <g class="ldr-arch__zellige" opacity="0">
+      <rect x="146" y="280" width="7" height="7" transform="rotate(45 149 283)" fill="none" stroke="#C9A96E" stroke-width="0.55" opacity="0.55"/>
+      <rect x="146" y="325" width="7" height="7" transform="rotate(45 149 328)" fill="rgba(26,95,173,0.25)" stroke="#C9A96E" stroke-width="0.55" opacity="0.55"/>
+      <rect x="146" y="370" width="7" height="7" transform="rotate(45 149 373)" fill="none" stroke="#C9A96E" stroke-width="0.55" opacity="0.55"/>
+      <rect x="146" y="415" width="7" height="7" transform="rotate(45 149 418)" fill="rgba(192,72,28,0.25)" stroke="#C9A96E" stroke-width="0.55" opacity="0.55"/>
+      <rect x="347" y="280" width="7" height="7" transform="rotate(45 350 283)" fill="none" stroke="#C9A96E" stroke-width="0.55" opacity="0.55"/>
+      <rect x="347" y="325" width="7" height="7" transform="rotate(45 350 328)" fill="rgba(26,95,173,0.25)" stroke="#C9A96E" stroke-width="0.55" opacity="0.55"/>
+      <rect x="347" y="370" width="7" height="7" transform="rotate(45 350 373)" fill="none" stroke="#C9A96E" stroke-width="0.55" opacity="0.55"/>
+      <rect x="347" y="415" width="7" height="7" transform="rotate(45 350 418)" fill="rgba(192,72,28,0.25)" stroke="#C9A96E" stroke-width="0.55" opacity="0.55"/>
+    </g>
+
+    <!-- Travelling light sweep -->
+    <path class="ldr-arch__sweep"
+      d="M 140,760 L 140,445 C 140,305 198,195 250,178 C 302,195 360,305 360,445 L 360,760"
+      stroke="rgba(255,248,218,0.55)" stroke-width="2.5" stroke-linecap="round"
+      stroke-dasharray="82 1258"/>
+  </svg>
+
+  <!-- Cinematic vignette -->
+  <div class="ldr-vignette"></div>
+
+  <!-- Logo + text — centered inside arch -->
+  <div class="loader__wrap">
+    <!-- Moroccan khatam rosette -->
+    <svg class="ldr-rosette" viewBox="0 0 90 60" fill="none" aria-hidden="true">
+      <polygon points="45,5 48.44,18.69 60.56,11.44 53.31,23.56 67,27 53.31,30.44 60.56,42.56 48.44,35.31 45,49 41.56,35.31 29.44,42.56 36.69,30.44 23,27 36.69,23.56 29.44,11.44 41.56,18.69"
+               stroke="#C9A96E" stroke-width="0.65" fill="none"/>
+      <circle cx="45" cy="27" r="7.5" stroke="#C9A96E" stroke-width="0.38" opacity="0.38"/>
+      <circle cx="45" cy="27" r="2" fill="#C9A96E" opacity="0.65"/>
+    </svg>
+
+    <div class="ldr-logo-wrap">
+      <div class="ldr-logo-bloom"></div>
+      <img class="loader__logo" src="media/logo.png" alt="Chicago Neggafa"/>
+    </div>
+
+    <svg class="ldr-divider" viewBox="0 0 220 12" fill="none" aria-hidden="true">
+      <line x1="0" y1="6" x2="85" y2="6" stroke="#C9A96E" stroke-width="0.55" opacity="0.32"/>
+      <rect x="98" y="2" width="8" height="8" fill="#C9A96E" opacity="0.65" transform="rotate(45 102 6)"/>
+      <circle cx="102" cy="6" r="1.6" fill="#FAF6EE" opacity="0.88"/>
+      <line x1="118" y1="6" x2="220" y2="6" stroke="#C9A96E" stroke-width="0.55" opacity="0.32"/>
+    </svg>
+
+    <p class="loader__name">Chicago Neggafa</p>
+    <p class="ldr-tagline">Moroccan Bridal Experience</p>
+    <p class="loader__arabic">نيقافة شيكاغو</p>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="ldr-progress"><div class="ldr-progress__fill"></div></div>
+</div>
+
+<!-- CUSTOM CURSOR -->
+<div id="cursor" aria-hidden="true">
+  <div class="cursor__ring"></div>
+  <div class="cursor__dot"></div>
+</div>
+
+<!-- NAV -->
+<nav id="nav" aria-label="Main navigation">
+  <a href="#hero" class="nav__logo">
+    <img class="nav__logo-img" src="media/logo.png" alt="Chicago Neggafa logo" />
+    <span>Chicago Neggafa</span>
+  </a>
+
+  <ul class="nav__links" id="navLinks">
+    <li><a href="#about">Story</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#lhenna">Laylat Lhenna</a></li>
+    <li><a href="#contact">Book</a></li>
+  </ul>
+
+  <div class="nav__right">
+    <a href="#contact" class="nav__cta">Book Now</a>
+    <button class="nav__hamburger" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO — FULLSCREEN CINEMATIC VIDEO -->
+<section id="hero" class="hero">
+
+  <!-- Arch clip-path definition -->
+  <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+    <defs>
+      <clipPath id="heroArchClip" clipPathUnits="objectBoundingBox">
+        <path d="M0,1 L0,0.44 C0.02,0.17 0.16,0.02 0.5,0 C0.84,0.02 0.98,0.17 1,0.44 L1,1 Z"/>
+      </clipPath>
+    </defs>
+  </svg>
+
+  <!-- Atmospheric background -->
+  <div class="hero__bg-fill" aria-hidden="true"></div>
+  <div class="hero__grain" aria-hidden="true"></div>
+  <canvas class="hero__particles" aria-hidden="true"></canvas>
+
+  <!-- Faint Moroccan geometric watermark -->
+  <div class="hero__watermark" aria-hidden="true">
+    <svg viewBox="0 0 400 400" fill="none" class="hero__watermark-svg">
+      <polygon points='200,18 204.35,31.69 217.56,24.44 210.31,36.56 224,40 210.31,43.44 217.56,55.56 204.35,48.31 200,62 195.65,48.31 182.44,55.56 189.69,43.44 176,40 189.69,36.56 182.44,24.44 195.65,31.69' stroke="#C9A96E" stroke-width="0.4" fill="none" transform="scale(4.5) translate(-155,-155)"/>
+      <circle cx="200" cy="200" r="175" stroke="#C9A96E" stroke-width="0.3" opacity="0.18"/>
+      <circle cx="200" cy="200" r="130" stroke="#C9A96E" stroke-width="0.25" opacity="0.12"/>
+      <circle cx="200" cy="200" r="85" stroke="#C9A96E" stroke-width="0.2" opacity="0.09"/>
+    </svg>
+  </div>
+
+  <!-- Cinematic depth layers -->
+  <div class="hero__fog" aria-hidden="true"></div>
+  <div class="hero__light-rays" aria-hidden="true"></div>
+  <div class="hero__calligraphy" aria-hidden="true">عروس</div>
+  <div class="hero__center-arch-glow" aria-hidden="true"></div>
+  <div class="hero__ambient-pulse" aria-hidden="true"></div>
+  <div class="hero__lantern-beam" aria-hidden="true"></div>
+
+  <!-- Top: eyebrow + title -->
+  <div class="hero__top">
+    <p class="hero__eyebrow">
+      <span class="hero__eyebrow-line"></span>
+      Chicago · Illinois
+      <span class="hero__eyebrow-line"></span>
+    </p>
+    <div class="hero__ornament-top" aria-hidden="true">
+      <svg viewBox="0 0 240 16" fill="none" width="240">
+        <line x1="0" y1="8" x2="88" y2="8" stroke="#C9A96E" stroke-width="0.6" opacity="0.5"/>
+        <path d="M96 8L100 3L104 8L100 13Z" fill="#C9A96E" opacity="0.7"/>
+        <circle cx="100" cy="8" r="1.2" fill="#C9A96E"/>
+        <path d="M108 8L113 3.5L118 8L113 12.5Z" fill="none" stroke="#C9A96E" stroke-width="0.5" opacity="0.4"/>
+        <path d="M82 8L87 3.5L92 8L87 12.5Z" fill="none" stroke="#C9A96E" stroke-width="0.5" opacity="0.4"/>
+        <line x1="112" y1="8" x2="240" y2="8" stroke="#C9A96E" stroke-width="0.6" opacity="0.5"/>
+      </svg>
+    </div>
+    <h1 class="hero__title">
+      <span class="word">Moroccan</span>
+      <em class="word italic">Bridal</em>
+      <span class="word">Elegance</span>
+    </h1>
+    <div class="hero__ornament-mid" aria-hidden="true">
+      <svg viewBox="0 0 180 12" fill="none" width="180">
+        <line x1="0" y1="6" x2="68" y2="6" stroke="#C9A96E" stroke-width="0.5" opacity="0.38"/>
+        <rect x="72" y="3" width="6" height="6" transform="rotate(45 75 6)" fill="#C9A96E" opacity="0.12" stroke="#C9A96E" stroke-width="0.5"/>
+        <circle cx="75" cy="6" r="1.5" fill="#C9A96E" opacity="0.80"/>
+        <line x1="82" y1="6" x2="180" y2="6" stroke="#C9A96E" stroke-width="0.5" opacity="0.38"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Dual arch video panels -->
+  <div class="hero__arches">
+    <div class="hero__arch-panel hero__arch-panel--left">
+      <video autoplay muted loop playsinline preload="auto">
+        <source src="media/videos/video-chicago-neggafa-01.mp4" type="video/mp4" />
+      </video>
+      <div class="hero__arch-vignette"></div>
+      <svg class="hero__arch-frame" viewBox="0 0 100 150" preserveAspectRatio="none" fill="none" aria-hidden="true">
+        <path d="M0,150 L0,66 C2,25.5 16,3 50,0 C84,3 98,25.5 100,66 L100,150" stroke="rgba(201,169,110,0.45)" stroke-width="1.4"/>
+        <path d="M5,150 L5,69 C7,33 20,9 50,6.5 C80,9 93,33 95,69 L95,150" stroke="rgba(201,169,110,0.18)" stroke-width="0.8"/>
+      </svg>
+    </div>
+
+    <div class="hero__arch-divider-center" aria-hidden="true">
+      <svg viewBox="0 0 24 180" fill="none" preserveAspectRatio="xMidYMid meet" width="100%" height="100%">
+        <line x1="12" y1="0" x2="12" y2="66" stroke="rgba(201,169,110,0.4)" stroke-width="0.8"/>
+        <path d="M12,74 L21,87 L12,100 L3,87 Z" fill="none" stroke="rgba(201,169,110,0.65)" stroke-width="0.8"/>
+        <circle cx="12" cy="87" r="2.8" fill="rgba(201,169,110,0.35)"/>
+        <line x1="12" y1="108" x2="12" y2="180" stroke="rgba(201,169,110,0.4)" stroke-width="0.8"/>
+      </svg>
+    </div>
+
+    <div class="hero__arch-panel hero__arch-panel--center">
+      <video autoplay muted loop playsinline preload="auto">
+        <source src="media/videos/video-chicago-neggafa-02.mp4" type="video/mp4" />
+      </video>
+      <div class="hero__arch-vignette"></div>
+      <svg class="hero__arch-frame" viewBox="0 0 100 150" preserveAspectRatio="none" fill="none" aria-hidden="true">
+        <path d="M0,150 L0,66 C2,25.5 16,3 50,0 C84,3 98,25.5 100,66 L100,150" stroke="rgba(201,169,110,0.45)" stroke-width="1.4"/>
+        <path d="M5,150 L5,69 C7,33 20,9 50,6.5 C80,9 93,33 95,69 L95,150" stroke="rgba(201,169,110,0.18)" stroke-width="0.8"/>
+      </svg>
+    </div>
+
+    <div class="hero__arch-divider-center" aria-hidden="true">
+      <svg viewBox="0 0 24 180" fill="none" preserveAspectRatio="xMidYMid meet" width="100%" height="100%">
+        <line x1="12" y1="0" x2="12" y2="66" stroke="rgba(201,169,110,0.4)" stroke-width="0.8"/>
+        <path d="M12,74 L21,87 L12,100 L3,87 Z" fill="none" stroke="rgba(201,169,110,0.65)" stroke-width="0.8"/>
+        <circle cx="12" cy="87" r="2.8" fill="rgba(201,169,110,0.35)"/>
+        <line x1="12" y1="108" x2="12" y2="180" stroke="rgba(201,169,110,0.4)" stroke-width="0.8"/>
+      </svg>
+    </div>
+
+    <div class="hero__arch-panel hero__arch-panel--right">
+      <video autoplay muted loop playsinline preload="auto">
+        <source src="media/videos/video-chicago-neggafa-04.mp4" type="video/mp4" />
+      </video>
+      <div class="hero__arch-vignette"></div>
+      <svg class="hero__arch-frame" viewBox="0 0 100 150" preserveAspectRatio="none" fill="none" aria-hidden="true">
+        <path d="M0,150 L0,66 C2,25.5 16,3 50,0 C84,3 98,25.5 100,66 L100,150" stroke="rgba(201,169,110,0.45)" stroke-width="1.4"/>
+        <path d="M5,150 L5,69 C7,33 20,9 50,6.5 C80,9 93,33 95,69 L95,150" stroke="rgba(201,169,110,0.18)" stroke-width="0.8"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Bottom: subtitle + CTA -->
+  <div class="hero__bottom">
+    <p class="hero__subtitle">Caftans · Jewelry · Laylat Lhenna · Amariya</p>
+    <div class="hero__actions">
+      <a href="https://wa.me/13125550000" class="btn btn--gold magnetic" target="_blank" rel="noopener">
+        <span>Book via WhatsApp</span>
+      </a>
+      <a href="#gallery" class="btn btn--ghost magnetic"><span>View Gallery</span></a>
+    </div>
+  </div>
+
+  <div class="hero__scroll-cue" aria-hidden="true">
+    <div class="hero__scroll-line"></div>
+    <span class="hero__scroll-text">Scroll</span>
+  </div>
+</section>
+
+<!-- ZELLIGE TILE BAND -->
+<div class="zellige-band" aria-hidden="true"></div>
+
+<!-- MARQUEE -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    <span>Caftans</span><b>✦</b>
+    <span>Takchitas</span><b>✦</b>
+    <span>Gold Jewelry Sets</span><b>✦</b>
+    <span>Taj &amp; Crown</span><b>✦</b>
+    <span>Laylat Lhenna</span><b>✦</b>
+    <span>3ammariyas</span><b>✦</b>
+    <span>Mdama Belts</span><b>✦</b>
+    <span>Henna Décor</span><b>✦</b>
+    <span>Caftans</span><b>✦</b>
+    <span>Takchitas</span><b>✦</b>
+    <span>Gold Jewelry Sets</span><b>✦</b>
+    <span>Taj &amp; Crown</span><b>✦</b>
+    <span>Laylat Lhenna</span><b>✦</b>
+    <span>3ammariyas</span><b>✦</b>
+    <span>Mdama Belts</span><b>✦</b>
+    <span>Henna Décor</span><b>✦</b>
+  </div>
+</div>
+
+<!-- ZELLIGE MOSAIC STRIP -->
+<div class="zellige-mosaic" aria-hidden="true"></div>
+<div class="zellige-accent-border" aria-hidden="true"></div>
+
+
+<!-- ABOUT -->
+<section id="about" class="about">
+  <div class="about__container">
+    <div class="about__images">
+      <div class="about__img-main reveal-scale">
+        <img src="media/kaftans/bride-silver-crown-white-kaftan-portrait-01.jpg"
+             alt="Moroccan bride in white kaftan with silver crown" loading="lazy" />
+      </div>
+      <div class="about__img-float reveal-scale" data-delay="200">
+        <img src="media/lhenna/lhenna-plate-candles-ivory-01.jpg"
+             alt="Laylat Lhenna plate with decorated candles" loading="lazy" />
+        <div class="about__img-caption">Laylat Lhenna</div>
+      </div>
+      <div class="about__rosette" aria-hidden="true">
+        <svg viewBox="0 0 100 100" fill="none">
+          <path d="M50 5L54 20H70L58 28L62 44L50 36L38 44L42 28L30 20H46Z" stroke="#1A4828" stroke-width="0.5" fill="none"/>
+          <circle cx="50" cy="50" r="46" stroke="#1A4828" stroke-width="0.3" opacity="0.3"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="about__text">
+      <p class="section-eyebrow reveal-up">Our Story</p>
+      <h2 class="section-title reveal-up" data-delay="80">
+        Where Morocco<br/><em>Meets Chicago</em>
+      </h2>
+      <div class="section-divider reveal-up" data-delay="120" aria-hidden="true">
+        <svg viewBox="0 0 200 8" fill="none"><path d="M0 4 Q50 0 100 4 Q150 8 200 4" stroke="#C9A96E" stroke-width="0.8"/></svg>
+      </div>
+      <p class="about__body reveal-up" data-delay="180">
+        Chicago Neggafa was born from a simple truth: Moroccan bridal traditions deserve to be honored in their full, authentic beauty, wherever you are in the world.
+      </p>
+      <p class="about__body reveal-up" data-delay="240">
+        Every kaftan, every jewel, every candle is chosen with intention. Because your wedding is not an occasion. It is a memory you will carry for a lifetime.
+      </p>
+      <!-- Artisanal highlights — replacing KPI stats -->
+      <div class="about__pillars reveal-up" data-delay="320">
+        <div class="about__pillar">
+          <span class="pillar-arabic">حرفة</span>
+          <span class="pillar-label">Couture Craftsmanship</span>
+        </div>
+        <div class="about__pillar-sep" aria-hidden="true"></div>
+        <div class="about__pillar">
+          <span class="pillar-arabic">تراث</span>
+          <span class="pillar-label">Moroccan Heritage</span>
+        </div>
+        <div class="about__pillar-sep" aria-hidden="true"></div>
+        <div class="about__pillar">
+          <span class="pillar-arabic">فخامة</span>
+          <span class="pillar-label">Timeless Elegance</span>
+        </div>
+      </div>
+      <a href="#contact" class="btn btn--outline-gold reveal-up magnetic" data-delay="400">
+        <span>Begin Your Story</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS / HOW IT WORKS -->
+<section class="process">
+  <div class="process__container">
+    <div class="process__header">
+      <p class="section-eyebrow reveal-up">How It Works</p>
+      <h2 class="section-title reveal-up" data-delay="80">
+        Your Journey<br/><em>Begins Here</em>
+      </h2>
+      <!-- Moroccan arch ornament -->
+      <svg class="process__ornament" viewBox="0 0 380 52" fill="none" aria-hidden="true">
+        <line x1="0" y1="38" x2="128" y2="38" stroke="#C9A96E" stroke-width="0.5" opacity="0.32"/>
+        <path d="M 140,52 A 50,50 0 0,1 240,52" stroke="#C9A96E" stroke-width="0.9" opacity="0.55"/>
+        <line x1="252" y1="38" x2="380" y2="38" stroke="#C9A96E" stroke-width="0.5" opacity="0.32"/>
+        <circle cx="190" cy="4" r="3" fill="#C9A96E" opacity="0.60"/>
+        <rect x="186" y="0" width="8" height="8" transform="rotate(45 190 4)" fill="none" stroke="#C9A96E" stroke-width="0.6" opacity="0.42"/>
+        <circle cx="140" cy="38" r="2" fill="#C9A96E" opacity="0.48"/>
+        <circle cx="240" cy="38" r="2" fill="#C9A96E" opacity="0.48"/>
+      </svg>
+    </div>
+    <div class="process__steps">
+      <div class="process__step reveal-up" data-delay="0">
+        <div class="process__step-num">01</div>
+        <div class="process__step-icon">
+          <svg viewBox="0 0 40 40" fill="none" width="22" height="22" aria-hidden="true"><rect x="6" y="6" width="28" height="28" rx="2" stroke="#C9A96E" stroke-width="1.2"/><path d="M12 14h16M12 20h12M12 26h8" stroke="#C9A96E" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Reach Out</h3>
+        <p>Message us on WhatsApp or Instagram with your event date and what you have in mind. We respond within 24 hours.</p>
+      </div>
+      <div class="process__arrow" aria-hidden="true">
+        <svg viewBox="0 0 60 20" fill="none" width="60">
+          <line x1="0" y1="10" x2="22" y2="10" stroke="#C9A96E" stroke-width="0.6" opacity="0.38"/>
+          <rect x="25.5" y="7.5" width="7" height="7" transform="rotate(45 29 11)" fill="rgba(201,169,110,0.10)" stroke="#C9A96E" stroke-width="0.75" opacity="0.65"/>
+          <circle cx="29" cy="11" r="1.6" fill="#C9A96E" opacity="0.82"/>
+          <line x1="33" y1="10" x2="60" y2="10" stroke="#C9A96E" stroke-width="0.6" opacity="0.38"/>
+        </svg>
+      </div>
+      <div class="process__step reveal-up" data-delay="120">
+        <div class="process__step-num">02</div>
+        <div class="process__step-icon">
+          <svg viewBox="0 0 40 40" fill="none" width="22" height="22" aria-hidden="true"><circle cx="20" cy="20" r="13" stroke="#C9A96E" stroke-width="1.2"/><path d="M13 20l5 5 9-9" stroke="#C9A96E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Curate Together</h3>
+        <p>We guide you through our collection of kaftans, jewelry, and décor, tailored to your palette and style vision.</p>
+      </div>
+      <div class="process__arrow" aria-hidden="true">
+        <svg viewBox="0 0 60 20" fill="none" width="60">
+          <line x1="0" y1="10" x2="22" y2="10" stroke="#C9A96E" stroke-width="0.6" opacity="0.38"/>
+          <rect x="25.5" y="7.5" width="7" height="7" transform="rotate(45 29 11)" fill="rgba(201,169,110,0.10)" stroke="#C9A96E" stroke-width="0.75" opacity="0.65"/>
+          <circle cx="29" cy="11" r="1.6" fill="#C9A96E" opacity="0.82"/>
+          <line x1="33" y1="10" x2="60" y2="10" stroke="#C9A96E" stroke-width="0.6" opacity="0.38"/>
+        </svg>
+      </div>
+      <div class="process__step reveal-up" data-delay="240">
+        <div class="process__step-num">03</div>
+        <div class="process__step-icon">
+          <svg viewBox="0 0 40 40" fill="none" width="22" height="22" aria-hidden="true"><rect x="8" y="16" width="24" height="17" rx="1" stroke="#C9A96E" stroke-width="1.2"/><path d="M14 16V12a6 6 0 0112 0v4" stroke="#C9A96E" stroke-width="1.2" stroke-linecap="round"/><circle cx="20" cy="24" r="2" fill="#C9A96E" opacity="0.7"/></svg>
+        </div>
+        <h3>We Deliver</h3>
+        <p>We ship nationwide or hand-deliver in the Chicago area, perfectly timed so everything is ready for your big day.</p>
+      </div>
+      <div class="process__arrow" aria-hidden="true">
+        <svg viewBox="0 0 60 20" fill="none" width="60">
+          <line x1="0" y1="10" x2="22" y2="10" stroke="#C9A96E" stroke-width="0.6" opacity="0.38"/>
+          <rect x="25.5" y="7.5" width="7" height="7" transform="rotate(45 29 11)" fill="rgba(201,169,110,0.10)" stroke="#C9A96E" stroke-width="0.75" opacity="0.65"/>
+          <circle cx="29" cy="11" r="1.6" fill="#C9A96E" opacity="0.82"/>
+          <line x1="33" y1="10" x2="60" y2="10" stroke="#C9A96E" stroke-width="0.6" opacity="0.38"/>
+        </svg>
+      </div>
+      <div class="process__step reveal-up" data-delay="360">
+        <div class="process__step-num">04</div>
+        <div class="process__step-icon">
+          <svg viewBox="0 0 40 40" fill="none" width="22" height="22" aria-hidden="true"><path d="M20 7L22.5 15H31L24.5 20L27 28L20 23L13 28L15.5 20L9 15H17.5Z" stroke="#C9A96E" stroke-width="1.2" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Your Day Shines</h3>
+        <p>You walk in feeling like royalty. Every detail reflects the beauty and soul of Moroccan heritage, exactly as it should.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ZELLIGE ACCENT BEFORE SERVICES -->
+<div class="zellige-accent-border" aria-hidden="true"></div>
+<div class="zellige-band" aria-hidden="true"></div>
+
+<!-- SERVICES -->
+<section id="services" class="services">
+  <div class="services__pattern" aria-hidden="true"></div>
+  <div class="services__container">
+    <div class="services__header">
+      <p class="section-eyebrow section-eyebrow--light reveal-up">What We Offer</p>
+      <h2 class="section-title section-title--light reveal-up" data-delay="80">
+        The Full<br/><em>Neggafa Experience</em>
+      </h2>
+    </div>
+
+    <div class="services__grid">
+      <article class="svc-card reveal-up" data-delay="0">
+        <div class="svc-card__img">
+          <img src="media/jewelry/jewelry-gold-set-ruby-full-01.jpg" alt="Moroccan gold jewelry set" loading="lazy" />
+          <div class="svc-card__img-overlay"></div>
+        </div>
+        <div class="svc-card__body">
+          <div class="svc-card__num">01</div>
+          <h3>Jewelry Sets</h3>
+          <p>Handcrafted taj crowns, necklaces, earrings &amp; mdama belts in gold, silver, pearl and gemstone.</p>
+          <span class="svc-card__badge">Rent or Buy</span>
+        </div>
+      </article>
+
+      <article class="svc-card reveal-up" data-delay="100">
+        <div class="svc-card__img">
+          <img src="media/kaftans/bride-white-gold-kaftan-sitting-01.jpg" alt="Moroccan bride kaftan" loading="lazy" />
+          <div class="svc-card__img-overlay"></div>
+        </div>
+        <div class="svc-card__body">
+          <div class="svc-card__num">02</div>
+          <h3>Caftans &amp; Takchitas</h3>
+          <p>Hand-embroidered caftans and layered takchitas in the finest Moroccan silk, velvet &amp; brocade.</p>
+          <span class="svc-card__badge">Rent or Buy</span>
+        </div>
+      </article>
+
+      <article class="svc-card reveal-up" data-delay="200">
+        <div class="svc-card__img">
+          <img src="media/lhenna/lhenna-plate-candles-ivory-01.jpg" alt="Laylat Lhenna setup" loading="lazy" />
+          <div class="svc-card__img-overlay"></div>
+        </div>
+        <div class="svc-card__body">
+          <div class="svc-card__num">03</div>
+          <h3>Laylat Lhenna</h3>
+          <p>Full henna night setup with decorated plates, candles, ribbons &amp; traditional accessories.</p>
+          <span class="svc-card__badge">Full Setup</span>
+        </div>
+      </article>
+
+      <article class="svc-card reveal-up" data-delay="300">
+        <div class="svc-card__img">
+          <img src="media/lhenna/lhenna-rosewater-bottles-01.jpg" alt="Moroccan wedding decor" loading="lazy" />
+          <div class="svc-card__img-overlay"></div>
+        </div>
+        <div class="svc-card__body">
+          <div class="svc-card__num">04</div>
+          <h3>3ammariyas &amp; Decor</h3>
+          <p>Ornate 3ammariyas, rosewater sprinklers &amp; authentic Moroccan decor for your venue.</p>
+          <span class="svc-card__badge">Rental</span>
+        </div>
+      </article>
+
+      <article class="svc-card reveal-up" data-delay="400">
+        <div class="svc-card__img">
+          <img src="media/jewelry/jewelry-gold-mdama-belt-multistone-01.jpg" alt="Moroccan mdama belt" loading="lazy" />
+          <div class="svc-card__img-overlay"></div>
+        </div>
+        <div class="svc-card__body">
+          <div class="svc-card__num">05</div>
+          <h3>Mdama Belts</h3>
+          <p>Statement waist belts in gold &amp; silver filigree with precious and semi-precious stones.</p>
+          <span class="svc-card__badge">Rent or Buy</span>
+        </div>
+      </article>
+
+      <article class="svc-card svc-card--cta reveal-up" data-delay="500">
+        <div class="svc-card__cta-inner">
+          <div class="svc-card__rosette" aria-hidden="true">
+            <svg viewBox="0 0 80 80" fill="none">
+              <path d="M40 5L43.5 18H57L46.5 26L50 39L40 31L30 39L33.5 26L23 18H36.5Z" stroke="#C9A96E" stroke-width="0.6" fill="none"/>
+              <circle cx="40" cy="40" r="36" stroke="#C9A96E" stroke-width="0.4" opacity="0.3"/>
+            </svg>
+          </div>
+          <p class="svc-card__arabic">كل شيء لزفافك</p>
+          <h3>Your Complete<br/>Wedding Vision</h3>
+          <p>Let us curate a full Moroccan bridal package tailored entirely to you.</p>
+          <a href="#contact" class="btn btn--gold magnetic"><span>Get a Quote</span></a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery" class="gallery">
+  <div class="gallery__header">
+    <p class="section-eyebrow reveal-up">The Collection</p>
+    <h2 class="section-title reveal-up" data-delay="80">
+      Crafted with<br/><em>Purpose &amp; Soul</em>
+    </h2>
+  </div>
+
+  <div class="gallery__filter" role="group" aria-label="Filter gallery">
+    <button class="gfilter-btn active" data-filter="all">All</button>
+    <button class="gfilter-btn" data-filter="kaftans">Kaftans</button>
+    <button class="gfilter-btn" data-filter="jewelry">Jewelry</button>
+    <button class="gfilter-btn" data-filter="lhenna">Lhenna</button>
+  </div>
+
+  <div class="gallery__grid">
+    <div class="g-item g-item--hero reveal-scale" data-delay="0">
+      <img src="media/jewelry/jewelry-gold-set-ruby-full-01.jpg" alt="Gold Moroccan jewelry set" loading="lazy" />
+      <div class="g-item__caption"><em>Or &amp; Rubis</em> — Gold Ruby Set</div>
+    </div>
+    <div class="g-item reveal-scale" data-delay="60">
+      <img src="media/lhenna/lhenna-candles-green-ribbon-01.jpg" alt="Lhenna candles with green ribbons" loading="lazy" />
+      <div class="g-item__caption">Lhenna Candles</div>
+    </div>
+    <div class="g-item reveal-scale" data-delay="120">
+      <img src="media/jewelry/jewelry-silver-pearl-set-full-01.jpg" alt="Silver pearl jewelry set" loading="lazy" />
+      <div class="g-item__caption">Silver Pearl Set</div>
+    </div>
+    <div class="g-item g-item--wide reveal-scale" data-delay="0">
+      <img src="media/lhenna/lhenna-plate-candles-ivory-01.jpg" alt="Laylat Lhenna decorated plate" loading="lazy" />
+      <div class="g-item__caption">Laylat Lhenna Plate</div>
+    </div>
+    <div class="g-item g-item--tall reveal-scale" data-delay="80">
+      <img src="media/jewelry/jewelry-gold-crown-ruby-closeup-01.jpg" alt="Gold crown taj close-up" loading="lazy" />
+      <div class="g-item__caption">Gold Taj Crown</div>
+    </div>
+    <div class="g-item reveal-scale" data-delay="0">
+      <img src="media/kaftans/bride-white-gold-kaftan-sitting-01.jpg" alt="Bride in white gold kaftan" loading="lazy" />
+      <div class="g-item__caption">White Gold Kaftan</div>
+    </div>
+    <div class="g-item reveal-scale" data-delay="60">
+      <img src="media/lhenna/lhenna-khamsa-candles-full-01.jpg" alt="Henna candles on white satin" loading="lazy" />
+      <div class="g-item__caption">Henna Satin Set</div>
+    </div>
+    <div class="g-item g-item--wide reveal-scale" data-delay="120">
+      <img src="media/kaftans/bride-white-kaftan-couple-standing-01.jpg" alt="Bride at wedding venue" loading="lazy" />
+      <div class="g-item__caption">Bride Portrait</div>
+    </div>
+    <div class="g-item g-item--tall reveal-scale" data-delay="0">
+      <img src="media/jewelry/jewelry-silver-full-set-crown-01.jpg" alt="Full silver jewelry set" loading="lazy" />
+      <div class="g-item__caption">Silver Crown Set</div>
+    </div>
+    <div class="g-item reveal-scale" data-delay="80">
+      <img src="media/lhenna/lhenna-rosewater-bottles-01.jpg" alt="Brass rosewater sprinklers" loading="lazy" />
+      <div class="g-item__caption">Rosewater Set</div>
+    </div>
+    <div class="g-item reveal-scale" data-delay="160">
+      <img src="media/jewelry/jewelry-gold-emerald-ruby-necklace-set-01.jpg" alt="Gold necklace with emerald stones" loading="lazy" />
+      <div class="g-item__caption">Emerald Necklace</div>
+    </div>
+    <div class="g-item reveal-scale" data-delay="0">
+      <img src="media/kaftans/kaftan-olive-green-embroidered-front-01.jpg" alt="Olive green embroidered kaftan" loading="lazy" />
+      <div class="g-item__caption">Olive Kaftan</div>
+    </div>
+    <div class="g-item g-item--wide reveal-scale" data-delay="80">
+      <img src="media/kaftans/bride-green-embroidered-kaftan-pearl-01.jpg" alt="Bride in green kaftan with pearl jewelry" loading="lazy" />
+      <div class="g-item__caption">Green Kaftan Bride</div>
+    </div>
+    <div class="g-item reveal-scale" data-delay="160">
+      <img src="media/jewelry/jewelry-gold-ruby-mdama-belt-set-01.jpg" alt="Gold mdama belt set" loading="lazy" />
+      <div class="g-item__caption">Gold Mdama Belt</div>
+    </div>
+  </div>
+
+  <!-- HORIZONTAL PHOTO STRIP -->
+  <div class="hstrip" aria-label="Photo showcase">
+    <div class="hstrip__track" id="hstripTrack">
+      <div class="hstrip__item"><img src="media/kaftans/bride-silver-crown-white-kaftan-portrait-01.jpg" alt="Bride silver crown" loading="lazy"/></div>
+      <div class="hstrip__item"><img src="media/jewelry/jewelry-gold-crystal-choker-set-full-01.jpg" alt="Gold crystal jewelry" loading="lazy"/></div>
+      <div class="hstrip__item"><img src="media/kaftans/kaftan-white-green-takchita-full-01.jpg" alt="White green takchita" loading="lazy"/></div>
+      <div class="hstrip__item"><img src="media/lhenna/lhenna-ceremony-table-candles-quran-01.jpg" alt="Lhenna ceremony table" loading="lazy"/></div>
+      <div class="hstrip__item"><img src="media/jewelry/jewelry-gold-crown-pearl-tiara-01.jpg" alt="Gold crown tiara" loading="lazy"/></div>
+      <div class="hstrip__item"><img src="media/kaftans/bride-white-kaftan-couple-sofa-01.jpg" alt="Bride couple sofa" loading="lazy"/></div>
+      <div class="hstrip__item"><img src="media/jewelry/jewelry-pearl-ruby-choker-set-01.jpg" alt="Pearl ruby choker" loading="lazy"/></div>
+      <div class="hstrip__item"><img src="media/lhenna/lhenna-welcome-sign-01.jpg" alt="Lhenna welcome sign" loading="lazy"/></div>
+      <div class="hstrip__item"><img src="media/kaftans/kaftan-olive-green-embroidered-full-01.jpg" alt="Olive kaftan" loading="lazy"/></div>
+      <div class="hstrip__item"><img src="media/jewelry/jewelry-gold-green-crystal-set-01.jpg" alt="Gold green crystal set" loading="lazy"/></div>
+      <!-- duplicate for seamless loop -->
+      <div class="hstrip__item" aria-hidden="true"><img src="media/kaftans/bride-silver-crown-white-kaftan-portrait-01.jpg" alt="" loading="lazy"/></div>
+      <div class="hstrip__item" aria-hidden="true"><img src="media/jewelry/jewelry-gold-crystal-choker-set-full-01.jpg" alt="" loading="lazy"/></div>
+      <div class="hstrip__item" aria-hidden="true"><img src="media/kaftans/kaftan-white-green-takchita-full-01.jpg" alt="" loading="lazy"/></div>
+      <div class="hstrip__item" aria-hidden="true"><img src="media/lhenna/lhenna-ceremony-table-candles-quran-01.jpg" alt="" loading="lazy"/></div>
+      <div class="hstrip__item" aria-hidden="true"><img src="media/jewelry/jewelry-gold-crown-pearl-tiara-01.jpg" alt="" loading="lazy"/></div>
+    </div>
+  </div>
+
+  <div class="gallery__more reveal-up">
+    <a href="https://www.instagram.com/chicago_neggafa/" target="_blank" rel="noopener" class="btn btn--outline-dark magnetic">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      <span>See More on Instagram</span>
+    </a>
+  </div>
+</section>
+
+<!-- VIDEO REEL -->
+<section id="reel" class="reel">
+  <div class="reel__container">
+    <div class="reel__header">
+      <p class="section-eyebrow section-eyebrow--light reveal-up">Behind the Magic</p>
+      <h2 class="section-title section-title--light reveal-up" data-delay="80">
+        Watch Our<br/><em>World Come Alive</em>
+      </h2>
+      <p class="reel__sub reveal-up" data-delay="160">Three moments. One brand. Entirely Moroccan.</p>
+    </div>
+
+    <div class="reel__grid">
+      <div class="reel__card reveal-scale" data-delay="0" data-src="media/videos/video-chicago-neggafa-01.mp4">
+        <div class="reel__thumb">
+          <img src="media/kaftans/bride-white-gold-kaftan-sitting-01.jpg" alt="Chicago Neggafa video 1" loading="lazy" />
+          <div class="reel__arch-frame" aria-hidden="true"></div>
+          <div class="reel__play-overlay">
+            <div class="reel__play-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <span class="reel__card-label">The Bride</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reel__card reel__card--featured reveal-scale" data-delay="150" data-src="media/videos/video-chicago-neggafa-02.mp4">
+        <div class="reel__thumb">
+          <img src="media/kaftans/bride-silver-crown-white-kaftan-portrait-01.jpg" alt="Chicago Neggafa video 2" loading="lazy" />
+          <div class="reel__arch-frame" aria-hidden="true"></div>
+          <div class="reel__play-overlay">
+            <div class="reel__play-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <span class="reel__card-label">The Ceremony</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reel__card reveal-scale" data-delay="300" data-src="media/videos/video-chicago-neggafa-03.mp4">
+        <div class="reel__thumb">
+          <img src="media/lhenna/lhenna-plate-candles-ivory-01.jpg" alt="Chicago Neggafa video 3" loading="lazy" />
+          <div class="reel__arch-frame" aria-hidden="true"></div>
+          <div class="reel__play-overlay">
+            <div class="reel__play-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <span class="reel__card-label">Laylat Lhenna</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO LIGHTBOX -->
+<div class="reel__lightbox" id="reelLightbox" aria-hidden="true" role="dialog" aria-label="Video player">
+  <div class="reel__lightbox-bg" id="reelLightboxBg"></div>
+  <button class="reel__close" id="reelClose" aria-label="Close video">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/></svg>
+  </button>
+  <div class="reel__lightbox-inner">
+    <video class="reel__fullvideo" id="reelVideo" controls playsinline></video>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" class="testimonials">
+  <div class="testi__haze" aria-hidden="true"></div>
+  <div class="testimonials__container">
+    <div class="testimonials__header">
+      <p class="section-eyebrow section-eyebrow--light reveal-up">Bride Stories</p>
+      <h2 class="section-title section-title--light reveal-up" data-delay="80">
+        Words from<br/><em>Our Brides</em>
+      </h2>
+    </div>
+
+    <div class="testi__editorial">
+      <div class="testi__moment reveal-up" data-delay="0">
+        <div class="testi__mark">"</div>
+        <blockquote class="testi__quote">The Laylat Lhenna setup was absolutely breathtaking. Every detail — the candles, the ribbons, the plates — was so perfectly arranged. I cried when I walked in. Chicago Neggafa made our night truly magical.</blockquote>
+        <footer class="testi__footer">
+          <span class="testi__stars">✦ ✦ ✦ ✦ ✦</span>
+          <strong class="testi__name">Sanaa M.</strong>
+          <span class="testi__loc">Chicago · Laylat Lhenna</span>
+        </footer>
+      </div>
+
+      <div class="testi__sep" aria-hidden="true">
+        <svg viewBox="0 0 2 140" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" width="2" height="140">
+          <line x1="1" y1="0" x2="1" y2="56" stroke="#C9A96E" stroke-width="0.6" stroke-dasharray="2,5"/>
+          <circle cx="1" cy="70" r="4" fill="none" stroke="#C9A96E" stroke-width="0.5"/>
+          <line x1="1" y1="84" x2="1" y2="140" stroke="#C9A96E" stroke-width="0.6" stroke-dasharray="2,5"/>
+        </svg>
+      </div>
+
+      <div class="testi__moment reveal-up" data-delay="120">
+        <div class="testi__mark">"</div>
+        <blockquote class="testi__quote">I wore the white &amp; gold takchita with the full pearl jewelry set. The quality was stunning — it felt like wearing a piece of Moroccan history. Every compliment that night was about my look.</blockquote>
+        <footer class="testi__footer">
+          <span class="testi__stars">✦ ✦ ✦ ✦ ✦</span>
+          <strong class="testi__name">Layla K.</strong>
+          <span class="testi__loc">Evanston · Full Bridal Package</span>
+        </footer>
+      </div>
+    </div>
+
+    <div class="testi__orn" aria-hidden="true">
+      <svg viewBox="0 0 320 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="320" height="20">
+        <line x1="0" y1="10" x2="136" y2="10" stroke="#C9A96E" stroke-width="0.5" stroke-dasharray="2,5"/>
+        <rect x="141" y="5" width="10" height="10" transform="rotate(45 146 10)" fill="none" stroke="#C9A96E" stroke-width="0.5"/>
+        <circle cx="160" cy="10" r="2.5" fill="#C9A96E" opacity="0.5"/>
+        <rect x="169" y="5" width="10" height="10" transform="rotate(45 174 10)" fill="none" stroke="#C9A96E" stroke-width="0.5"/>
+        <line x1="184" y1="10" x2="320" y2="10" stroke="#C9A96E" stroke-width="0.5" stroke-dasharray="2,5"/>
+      </svg>
+    </div>
+
+    <div class="testi__editorial testi__editorial--b">
+      <div class="testi__moment reveal-up" data-delay="0">
+        <div class="testi__mark">"</div>
+        <blockquote class="testi__quote">From first message to final setup — exceptional. They understood my vision and delivered something even more beautiful than I imagined. 100% authentic, 100% professional.</blockquote>
+        <footer class="testi__footer">
+          <span class="testi__stars">✦ ✦ ✦ ✦ ✦</span>
+          <strong class="testi__name">Nadia B.</strong>
+          <span class="testi__loc">Oak Park · Kaftan + Jewelry Rental</span>
+        </footer>
+      </div>
+
+      <div class="testi__sep" aria-hidden="true">
+        <svg viewBox="0 0 2 140" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" width="2" height="140">
+          <line x1="1" y1="0" x2="1" y2="56" stroke="#C9A96E" stroke-width="0.6" stroke-dasharray="2,5"/>
+          <circle cx="1" cy="70" r="4" fill="none" stroke="#C9A96E" stroke-width="0.5"/>
+          <line x1="1" y1="84" x2="1" y2="140" stroke="#C9A96E" stroke-width="0.6" stroke-dasharray="2,5"/>
+        </svg>
+      </div>
+
+      <div class="testi__moment reveal-up" data-delay="120">
+        <div class="testi__mark">"</div>
+        <blockquote class="testi__quote">My daughter's wedding looked like it came straight from Fes. The taj, the mdama belt — all perfection. Chicago Neggafa is THE go-to for Moroccan weddings in Illinois.</blockquote>
+        <footer class="testi__footer">
+          <span class="testi__stars">✦ ✦ ✦ ✦ ✦</span>
+          <strong class="testi__name">Fatima Z.</strong>
+          <span class="testi__loc">Naperville · Full Package</span>
+        </footer>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LHENNA -->
+<section id="lhenna" class="lhenna">
+  <div class="lhenna__parallax-bg" id="lhennaBg">
+    <img src="media/lhenna/lhenna-khamsa-candles-full-01.jpg" alt="" loading="lazy" />
+  </div>
+  <div class="lhenna__overlay"></div>
+  <div class="lhenna__dark-veil" aria-hidden="true"></div>
+
+  <div class="lhenna__tear-field" aria-hidden="true">
+    <span class="ltear" style="--x:4%;--sz:7px;--dur:11s;--del:0s;--op:0.17"></span>
+    <span class="ltear" style="--x:11%;--sz:5px;--dur:9s;--del:2.3s;--op:0.12"></span>
+    <span class="ltear" style="--x:18%;--sz:10px;--dur:13s;--del:1s;--op:0.2"></span>
+    <span class="ltear" style="--x:26%;--sz:6px;--dur:8s;--del:4s;--op:0.14"></span>
+    <span class="ltear" style="--x:33%;--sz:8px;--dur:10s;--del:1.8s;--op:0.19"></span>
+    <span class="ltear" style="--x:41%;--sz:5px;--dur:12s;--del:0.5s;--op:0.11"></span>
+    <span class="ltear" style="--x:48%;--sz:9px;--dur:9s;--del:3s;--op:0.17"></span>
+    <span class="ltear" style="--x:55%;--sz:6px;--dur:14s;--del:1.5s;--op:0.13"></span>
+    <span class="ltear" style="--x:63%;--sz:11px;--dur:11s;--del:5s;--op:0.21"></span>
+    <span class="ltear" style="--x:71%;--sz:5px;--dur:8s;--del:2.7s;--op:0.1"></span>
+    <span class="ltear" style="--x:78%;--sz:8px;--dur:12s;--del:0.9s;--op:0.18"></span>
+    <span class="ltear" style="--x:85%;--sz:7px;--dur:10s;--del:3.5s;--op:0.15"></span>
+    <span class="ltear" style="--x:91%;--sz:5px;--dur:9s;--del:6s;--op:0.12"></span>
+    <span class="ltear" style="--x:96%;--sz:9px;--dur:13s;--del:1.2s;--op:0.17"></span>
+  </div>
+  <div class="lhenna__top-drips" aria-hidden="true">
+    <span class="ldrip" style="--l:1.5%;--h:24px;--w:5px;--del:0s"></span>
+    <span class="ldrip" style="--l:5%;--h:46px;--w:8px;--del:0.5s"></span>
+    <span class="ldrip" style="--l:9%;--h:18px;--w:4px;--del:1s"></span>
+    <span class="ldrip" style="--l:13%;--h:58px;--w:9px;--del:0.2s"></span>
+    <span class="ldrip" style="--l:17%;--h:30px;--w:6px;--del:1.4s"></span>
+    <span class="ldrip" style="--l:21%;--h:20px;--w:4px;--del:0.7s"></span>
+    <span class="ldrip" style="--l:25%;--h:44px;--w:7px;--del:1.8s"></span>
+    <span class="ldrip" style="--l:29%;--h:26px;--w:5px;--del:0.4s"></span>
+    <span class="ldrip" style="--l:33%;--h:64px;--w:10px;--del:1.1s"></span>
+    <span class="ldrip" style="--l:37%;--h:22px;--w:4px;--del:1.6s"></span>
+    <span class="ldrip" style="--l:41%;--h:38px;--w:7px;--del:0.3s"></span>
+    <span class="ldrip" style="--l:45%;--h:52px;--w:9px;--del:0.8s"></span>
+    <span class="ldrip" style="--l:49%;--h:18px;--w:4px;--del:1.3s"></span>
+    <span class="ldrip" style="--l:53%;--h:36px;--w:6px;--del:0.6s"></span>
+    <span class="ldrip" style="--l:57%;--h:56px;--w:9px;--del:1.7s"></span>
+    <span class="ldrip" style="--l:61%;--h:22px;--w:4px;--del:0.1s"></span>
+    <span class="ldrip" style="--l:65%;--h:44px;--w:8px;--del:2.1s"></span>
+    <span class="ldrip" style="--l:69%;--h:30px;--w:5px;--del:0.9s"></span>
+    <span class="ldrip" style="--l:73%;--h:52px;--w:9px;--del:0.4s"></span>
+    <span class="ldrip" style="--l:77%;--h:24px;--w:5px;--del:1.9s"></span>
+    <span class="ldrip" style="--l:81%;--h:42px;--w:7px;--del:0.7s"></span>
+    <span class="ldrip" style="--l:85%;--h:60px;--w:10px;--del:0.3s"></span>
+    <span class="ldrip" style="--l:89%;--h:26px;--w:5px;--del:1.8s"></span>
+    <span class="ldrip" style="--l:93%;--h:46px;--w:8px;--del:1.0s"></span>
+    <span class="ldrip" style="--l:97%;--h:20px;--w:4px;--del:2.2s"></span>
+  </div>
+
+  <div class="lhenna__container">
+    <div class="lhenna__text">
+      <div class="lhenna__arch-ornament" aria-hidden="true">
+        <svg class="lhenna__arch-svg" viewBox="0 0 80 120" fill="none" xmlns="http://www.w3.org/2000/svg" width="70">
+          <path d="M10,118 L10,58 C10,38 16,18 40,5 C64,18 70,38 70,58 L70,118" stroke="rgba(201,169,110,0.5)" stroke-width="0.9" fill="none"/>
+          <path d="M18,118 L18,61 C18,43 23,26 40,15 C57,26 62,43 62,61 L62,118" stroke="rgba(201,169,110,0.24)" stroke-width="0.5" fill="none"/>
+          <line x1="10" y1="96" x2="70" y2="96" stroke="rgba(201,169,110,0.28)" stroke-width="0.5"/>
+          <circle cx="40" cy="35" r="7" fill="none" stroke="rgba(201,169,110,0.55)" stroke-width="0.7"/>
+          <circle cx="40" cy="35" r="2.8" fill="rgba(201,169,110,0.28)"/>
+          <g stroke="rgba(201,169,110,0.38)" stroke-width="0.5">
+            <line x1="40" y1="26" x2="40" y2="23"/>
+            <line x1="40" y1="44" x2="40" y2="47"/>
+            <line x1="31" y1="35" x2="28" y2="35"/>
+            <line x1="49" y1="35" x2="52" y2="35"/>
+            <line x1="35" y1="30" x2="32.5" y2="27.5"/>
+            <line x1="45" y1="40" x2="47.5" y2="42.5"/>
+            <line x1="45" y1="30" x2="47.5" y2="27.5"/>
+            <line x1="35" y1="40" x2="32.5" y2="42.5"/>
+          </g>
+          <path d="M10,74 L6,79 L10,84 L14,79 Z" fill="none" stroke="rgba(201,169,110,0.3)" stroke-width="0.5"/>
+          <path d="M70,74 L66,79 L70,84 L74,79 Z" fill="none" stroke="rgba(201,169,110,0.3)" stroke-width="0.5"/>
+        </svg>
+      </div>
+      <p class="section-eyebrow section-eyebrow--light reveal-up">The Sacred Night</p>
+      <h2 class="lhenna__title reveal-up" data-delay="80">Laylat Lhenna</h2>
+      <p class="lhenna__arabic reveal-up" data-delay="160">ليلة الحناء</p>
+      <p class="lhenna__body reveal-up" data-delay="240">
+        The night before everything changes. Adorned in candlelight, perfumed with rose and oud, wrapped in silk and memory. We set every detail with ritual care: hand-painted plates, artisan candles, ribbons threaded with intention. So you can simply breathe, and be present, in the most sacred moment of your life.
+      </p>
+      <div class="lhenna__features reveal-up" data-delay="320">
+        <div class="lhenna__feat">
+          <svg viewBox="0 0 16 16" fill="none" width="14"><path d="M8 1L9.2 5H13.5L10 7.5L11.2 11.5L8 9L4.8 11.5L6 7.5L2.5 5H6.8Z" stroke="#C9A96E" stroke-width="0.6" fill="none"/></svg>
+          Hand-Painted Ceremonial Plates
+        </div>
+        <div class="lhenna__feat">
+          <svg viewBox="0 0 16 16" fill="none" width="14"><path d="M8 1L9.2 5H13.5L10 7.5L11.2 11.5L8 9L4.8 11.5L6 7.5L2.5 5H6.8Z" stroke="#C9A96E" stroke-width="0.6" fill="none"/></svg>
+          Candlelight &amp; Woven Ribbons
+        </div>
+        <div class="lhenna__feat">
+          <svg viewBox="0 0 16 16" fill="none" width="14"><path d="M8 1L9.2 5H13.5L10 7.5L11.2 11.5L8 9L4.8 11.5L6 7.5L2.5 5H6.8Z" stroke="#C9A96E" stroke-width="0.6" fill="none"/></svg>
+          Rose, Oud &amp; Sacred Kohl
+        </div>
+        <div class="lhenna__feat">
+          <svg viewBox="0 0 16 16" fill="none" width="14"><path d="M8 1L9.2 5H13.5L10 7.5L11.2 11.5L8 9L4.8 11.5L6 7.5L2.5 5H6.8Z" stroke="#C9A96E" stroke-width="0.6" fill="none"/></svg>
+          Complete Sacred Atmosphere
+        </div>
+      </div>
+      <a href="#contact" class="btn btn--gold reveal-up magnetic" data-delay="400">
+        <span>Reserve Your Sacred Night</span>
+      </a>
+    </div>
+
+    <div class="lhenna__gallery">
+      <div class="lhenna__gitem lhenna__gitem--main reveal-scale" data-delay="0">
+        <img src="media/lhenna/lhenna-plate-candles-ivory-01.jpg" alt="Laylat Lhenna ceremonial plate" loading="lazy" />
+      </div>
+      <div class="lhenna__gitem lhenna__gitem--frag reveal-scale" data-delay="200">
+        <img src="media/lhenna/lhenna-candles-green-ribbon-01.jpg" alt="Henna candles and green ribbons" loading="lazy" />
+      </div>
+      <div class="lhenna__gitem lhenna__gitem--accent reveal-scale" data-delay="350">
+        <img src="media/lhenna/lhenna-rosewater-bottles-01.jpg" alt="Rosewater sprinklers" loading="lazy" />
+      </div>
+      <div class="lhenna__gitem lhenna__gitem--detail reveal-scale" data-delay="500">
+        <img src="media/lhenna/lhenna-ceremony-table-full-01.jpg" alt="Full Laylat Lhenna ceremony table" loading="lazy" />
+      </div>
+      <div class="lhenna__glow-halo" aria-hidden="true"></div>
+      <div class="lhenna__candle-glow" aria-hidden="true"></div>
+      <div class="lhenna__ambient-candles" aria-hidden="true">
+        <div class="lhenna__candle" style="--b:5%;--r:18%;--s:1">
+          <div class="lhenna__flame"></div>
+          <div class="lhenna__wick"></div>
+        </div>
+        <div class="lhenna__candle" style="--b:2%;--r:9%;--s:0.65">
+          <div class="lhenna__flame"></div>
+          <div class="lhenna__wick"></div>
+        </div>
+        <div class="lhenna__candle" style="--b:8%;--r:28%;--s:0.55">
+          <div class="lhenna__flame"></div>
+          <div class="lhenna__wick"></div>
+        </div>
+      </div>
+      <div class="lhenna__wisps" aria-hidden="true">
+        <div class="lhenna__wisp" style="--by:13%;--br:18%;--dur:5.5s;--del:0s;--ww:2px"></div>
+        <div class="lhenna__wisp" style="--by:9%;--br:9%;--dur:7s;--del:2.2s;--ww:3px"></div>
+        <div class="lhenna__wisp" style="--by:15%;--br:28%;--dur:4.8s;--del:1.1s;--ww:2px"></div>
+      </div>
+    </div>
+  </div>
+  <div class="lhenna__bottom-drips" aria-hidden="true">
+    <span class="ldrip" style="--l:3%;--h:22px;--w:5px;--del:0.3s"></span>
+    <span class="ldrip" style="--l:7%;--h:40px;--w:7px;--del:1.2s"></span>
+    <span class="ldrip" style="--l:12%;--h:28px;--w:5px;--del:0s"></span>
+    <span class="ldrip" style="--l:17%;--h:50px;--w:9px;--del:0.8s"></span>
+    <span class="ldrip" style="--l:23%;--h:18px;--w:4px;--del:1.5s"></span>
+    <span class="ldrip" style="--l:28%;--h:44px;--w:8px;--del:0.4s"></span>
+    <span class="ldrip" style="--l:34%;--h:30px;--w:6px;--del:1.9s"></span>
+    <span class="ldrip" style="--l:39%;--h:56px;--w:9px;--del:0.6s"></span>
+    <span class="ldrip" style="--l:45%;--h:22px;--w:4px;--del:1.1s"></span>
+    <span class="ldrip" style="--l:51%;--h:38px;--w:7px;--del:0.2s"></span>
+    <span class="ldrip" style="--l:57%;--h:48px;--w:8px;--del:1.7s"></span>
+    <span class="ldrip" style="--l:63%;--h:26px;--w:5px;--del:0.9s"></span>
+    <span class="ldrip" style="--l:69%;--h:54px;--w:9px;--del:0.1s"></span>
+    <span class="ldrip" style="--l:75%;--h:32px;--w:6px;--del:1.4s"></span>
+    <span class="ldrip" style="--l:80%;--h:44px;--w:8px;--del:0.7s"></span>
+    <span class="ldrip" style="--l:85%;--h:20px;--w:4px;--del:2s"></span>
+    <span class="ldrip" style="--l:90%;--h:36px;--w:6px;--del:0.5s"></span>
+    <span class="ldrip" style="--l:94%;--h:52px;--w:9px;--del:1.3s"></span>
+    <span class="ldrip" style="--l:98%;--h:24px;--w:5px;--del:1.6s"></span>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="faq">
+  <div class="faq__container">
+    <div class="faq__header">
+      <div class="faq__arch-ornament" aria-hidden="true"><div class="faq__arch-mini"></div></div>
+      <p class="section-eyebrow reveal-up">Before Your Night Begins</p>
+      <h2 class="section-title reveal-up" data-delay="80">Things Brides<br/><em>Often Ask</em></h2>
+    </div>
+    <div class="faq__divider" aria-hidden="true"><span class="faq__div-line"></span><span class="faq__div-gem">✦</span><span class="faq__div-line"></span></div>
+    <div class="faq__editorial">
+      <div class="faq-qs reveal-up" data-delay="0">
+        <p class="faq-qs__num">01</p>
+        <p class="faq-qs__q">Do you sell or only rent?</p>
+        <p class="faq-qs__a">Both. Most jewelry sets, caftans, and takchitas are available for sale or rental. Decor items and ammariyas are rental only. Reach out to check availability for your date.</p>
+      </div>
+      <div class="faq-qs reveal-up" data-delay="60">
+        <p class="faq-qs__num">02</p>
+        <p class="faq-qs__q">Do you ship outside of Chicago?</p>
+        <p class="faq-qs__a">Yes, we ship across the United States. In-person consultations are available in the Chicago area. Many brides book us entirely remotely.</p>
+      </div>
+      <div class="faq-qs reveal-up" data-delay="120">
+        <p class="faq-qs__num">03</p>
+        <p class="faq-qs__q">How early should I book?</p>
+        <p class="faq-qs__a">We recommend 4 to 6 weeks minimum. For full Laylat Lhenna packages, 6 to 8 weeks is ideal. Every detail deserves the time to be perfect.</p>
+      </div>
+      <div class="faq-qs reveal-up" data-delay="180">
+        <p class="faq-qs__num">04</p>
+        <p class="faq-qs__q">Can I do a full bridal package?</p>
+        <p class="faq-qs__a">Absolutely. We offer complete Moroccan bridal packages: kaftan, jewelry, mdama belt, Laylat Lhenna setup, and decor, all coordinated for your most sacred day.</p>
+      </div>
+      <div class="faq-qs reveal-up" data-delay="240">
+        <p class="faq-qs__num">05</p>
+        <p class="faq-qs__q">How do I get a quote?</p>
+        <p class="faq-qs__a">Message us on WhatsApp or Instagram with your event date, the pieces you love, and your city. We respond within 24 hours, usually sooner.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact">
+  <div class="contact__pattern" aria-hidden="true"></div>
+  <div class="contact__container">
+    <div class="contact__left">
+      <p class="section-eyebrow section-eyebrow--light reveal-up">Let's Connect</p>
+      <h2 class="section-title section-title--light reveal-up" data-delay="80">
+        Begin Your<br/><em>Moroccan Story</em>
+      </h2>
+      <p class="contact__body reveal-up" data-delay="160">
+        Your story begins with a single message. Whether your ceremony is months away or just weeks, we hold space for every bride who enters this world. Reach out, and let us begin crafting the most sacred chapter of your life.
+      </p>
+
+      <div class="contact__channels">
+        <a href="https://wa.me/13125551234" target="_blank" rel="noopener"
+           class="contact__ch reveal-up magnetic" data-delay="240">
+          <div class="contact__ch-platform">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            WhatsApp
+          </div>
+          <span class="contact__ch-desc">Private conversation · Fastest response</span>
+          <svg class="contact__ch-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </a>
+
+        <a href="https://www.instagram.com/chicago_neggafa/" target="_blank" rel="noopener"
+           class="contact__ch reveal-up magnetic" data-delay="320">
+          <div class="contact__ch-platform">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            Instagram
+          </div>
+          <span class="contact__ch-desc">@chicago_neggafa · Our visual world</span>
+          <svg class="contact__ch-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </a>
+
+        <a href="https://www.tiktok.com/@chicago_neggafa" target="_blank" rel="noopener"
+           class="contact__ch reveal-up magnetic" data-delay="400">
+          <div class="contact__ch-platform">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.15 8.15 0 004.77 1.52V6.76a4.85 4.85 0 01-1-.07z"/></svg>
+            TikTok
+          </div>
+          <span class="contact__ch-desc">@chicago_neggafa · Behind the ceremony</span>
+          <svg class="contact__ch-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="contact__right reveal-scale">
+      <div class="contact__arch-card">
+        <div class="contact__arch-img">
+          <img src="media/kaftans/bride-silver-crown-white-kaftan-portrait-01.jpg" alt="Chicago Neggafa Moroccan bride" loading="lazy" />
+        </div>
+        <blockquote class="contact__quote">
+          <p>"Every bride deserves to feel like royalty on her wedding day."</p>
+          <cite>Chicago Neggafa</cite>
+        </blockquote>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__brand">
+      <img class="footer__logo-img" src="media/logo.png" alt="Chicago Neggafa logo" />
+      <p class="footer__name">Chicago Neggafa</p>
+      <p class="footer__arabic">نيقافة شيكاغو</p>
+      <p class="footer__tagline">Moroccan Bridal Experience · Chicago, IL</p>
+    </div>
+
+    <nav class="footer__nav" aria-label="Footer navigation">
+      <ul>
+        <li><a href="#about">Story</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#lhenna">Laylat Lhenna</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#contact">Book</a></li>
+      </ul>
+    </nav>
+
+    <div class="footer__social">
+      <p>Follow the Journey</p>
+      <div class="footer__social-row">
+        <a href="https://www.instagram.com/chicago_neggafa/" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="20"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+        <a href="https://www.tiktok.com/@chicago_neggafa" target="_blank" rel="noopener" aria-label="TikTok">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="20"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.15 8.15 0 004.77 1.52V6.76a4.85 4.85 0 01-1-.07z"/></svg>
+        </a>
+        <a href="https://wa.me/13125551234" target="_blank" rel="noopener" aria-label="WhatsApp">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer__bottom">
+    <p>&copy; 2026 Chicago Neggafa. All rights reserved.</p>
+    <p>Made with love for Moroccan brides ✦</p>
+  </div>
+</footer>
+
+<!-- GALLERY LIGHTBOX -->
+<div class="glightbox" id="galleryLightbox" aria-hidden="true" role="dialog" aria-label="Gallery image viewer">
+  <div class="glightbox__bg" id="galleryLightboxBg"></div>
+  <button class="glightbox__close" id="galleryLightboxClose" aria-label="Close gallery">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/></svg>
+  </button>
+  <button class="glightbox__nav glightbox__prev" id="galleryPrev" aria-label="Previous image">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <div class="glightbox__inner">
+    <img class="glightbox__img" id="galleryLightboxImg" src="" alt="" />
+    <p class="glightbox__caption" id="galleryLightboxCaption"></p>
+  </div>
+  <button class="glightbox__nav glightbox__next" id="galleryNext" aria-label="Next image">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <div class="glightbox__counter" id="galleryCounter"></div>
+</div>
+
+<!-- MOBILE STICKY CTA -->
+<div class="sticky-cta" id="stickyCta" aria-hidden="true">
+  <a href="https://wa.me/13125551234" class="sticky-cta__btn sticky-cta__btn--wa" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    WhatsApp
+  </a>
+  <a href="#contact" class="sticky-cta__btn sticky-cta__btn--book">
+    Book Now
+  </a>
+</div>
+
+<!-- WhatsApp FAB -->
+<a href="https://wa.me/13125551234" class="wa-fab" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <div class="wa-fab__pulse" aria-hidden="true"></div>
+  <svg viewBox="0 0 24 24" fill="currentColor" width="26" height="26"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script src="script.js?v=17"></script>
+</body>
+</html>
