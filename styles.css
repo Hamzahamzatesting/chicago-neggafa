@@ -1154,15 +1154,15 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
 }
 .lhenna__parallax-bg img {
   width: 100%; height: 100%;
-  filter: saturate(0.85) brightness(0.55);
+  filter: saturate(0.88) brightness(0.72);
 }
 .lhenna__overlay {
   position: absolute; inset: 0;
   background: linear-gradient(
     to right,
-    rgba(6,14,8,0.92) 0%,
-    rgba(12,36,23,0.72) 40%,
-    rgba(25,14,4,0.38) 100%
+    rgba(6,14,8,0.62) 0%,
+    rgba(12,36,23,0.42) 40%,
+    rgba(25,14,4,0.18) 100%
   );
 }
 .lhenna__container {
@@ -1851,6 +1851,16 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
   .hero__title { font-size: clamp(2.8rem, 12vw, 5rem); }
   .lhenna__gallery { height: 300px; }
   .lhenna__features { grid-template-columns: 1fr; }
+  /* On mobile, lhenna is single column — change overlay to top-to-bottom */
+  .lhenna__overlay {
+    background: linear-gradient(
+      to bottom,
+      rgba(6,14,8,0.72) 0%,
+      rgba(6,14,8,0.38) 35%,
+      rgba(6,14,8,0.38) 65%,
+      rgba(6,14,8,0.72) 100%
+    );
+  }
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -4013,10 +4023,24 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
   .hero__top .hero__title .word:nth-child(3) { padding-left: 0; }
   .hero__top .hero__title .italic { font-size: clamp(3.8rem, 14vw, 7rem); }
   .hero__bottom {
-    right: 50%; transform: translateX(50%);
-    text-align: center; max-width: 85vw;
+    left: 50%; right: auto;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 88vw; max-width: 320px;
+    padding: 0 0.5rem;
   }
-  .hero__bottom .hero__actions { justify-content: center; }
+  .hero__bottom .hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.7rem;
+  }
+  .hero__bottom .hero__actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .hero__arch-panel--center {
+    height: clamp(260px, 44vh, 360px);
+  }
   .hero__calligraphy { font-size: clamp(10rem, 42vw, 20rem); }
   .hero__fog, .hero__light-rays { display: none; }
   .hero__lantern-beam,
