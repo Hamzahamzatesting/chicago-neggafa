@@ -584,13 +584,29 @@ function galleryNavigate(dir) {
 }
 
 galleryItemsList.forEach(item => {
-  item.addEventListener('click', () => {
+  function handleGalleryOpen() {
     buildGalleryItems();
     const visibleItems = Array.from(document.querySelectorAll('.gallery__grid .g-item:not(.filter-hidden)'));
     const idx = visibleItems.indexOf(item);
     openGalleryLightbox(idx >= 0 ? idx : 0);
-  });
+  }
+  item.addEventListener('click', handleGalleryOpen);
+  // Explicit touchend for iOS Safari reliability
+  let touchMoved = false;
+  item.addEventListener('touchstart', () => { touchMoved = false; }, { passive: true });
+  item.addEventListener('touchmove',  () => { touchMoved = true;  }, { passive: true });
+  item.addEventListener('touchend',   (e) => { if (!touchMoved) { e.preventDefault(); handleGalleryOpen(); } });
 });
+
+// Swipe support in lightbox
+let lbTouchX = 0;
+if (galleryLightbox) {
+  galleryLightbox.addEventListener('touchstart', e => { lbTouchX = e.changedTouches[0].clientX; }, { passive: true });
+  galleryLightbox.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - lbTouchX;
+    if (Math.abs(dx) > 50) galleryNavigate(dx < 0 ? 1 : -1);
+  }, { passive: true });
+}
 
 if (galleryClose)    galleryClose.addEventListener('click', closeGalleryLightbox);
 if (galleryLightboxBg) galleryLightboxBg.addEventListener('click', closeGalleryLightbox);
@@ -839,12 +855,16 @@ document.querySelectorAll('.hero__arch-panel video').forEach(v => {
 
 /* ─── HERO MOBILE: VIDEO CAROUSEL ─── */
 (function initHeroMobileCarousel() {
-  if (!window.matchMedia('(max-width: 640px)').matches) return;
+  if (window.innerWidth > 640) return;
   const panel = document.querySelector('.hero__arch-panel--center');
   if (!panel) return;
 
   const mainVid = panel.querySelector('video');
   if (!mainVid) return;
+
+  function applyBaseStyle(v) {
+    v.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 1.2s ease;';
+  }
 
   function makeVid(src) {
     const v = document.createElement('video');
@@ -853,26 +873,36 @@ document.querySelectorAll('.hero__arch-panel video').forEach(v => {
     v.setAttribute('playsinline', '');
     v.setAttribute('preload', 'auto');
     v.innerHTML = `<source src="${src}" type="video/mp4">`;
+    applyBaseStyle(v);
+    v.style.opacity = '0';
     return v;
   }
+
+  // Apply base styles to main (currently visible) video first
+  applyBaseStyle(mainVid);
+  mainVid.style.opacity = '1';
 
   const vid1 = makeVid('media/videos/video-chicago-neggafa-01.mp4');
   const vid4 = makeVid('media/videos/video-chicago-neggafa-04.mp4');
   const vignette = panel.querySelector('.hero__arch-vignette');
 
   panel.insertBefore(vid1, mainVid);
-  panel.insertBefore(vid4, vignette || null);
+  if (vignette) panel.insertBefore(vid4, vignette);
+  else panel.appendChild(vid4);
 
-  const vids = [vid1, mainVid, vid4];
+  // Start with mainVid (video-02) visible, then cycle 02 → 04 → 01 → 02
+  const vids = [mainVid, vid4, vid1];
   let current = 0;
 
-  vids[current].classList.add('hero__carousel-active');
-  vids.forEach(v => { v.muted = true; v.play().catch(() => {}); });
+  function startAll() {
+    vids.forEach(v => { v.muted = true; v.play().catch(() => {}); });
+  }
+  startAll();
 
   setInterval(() => {
-    vids[current].classList.remove('hero__carousel-active');
+    vids[current].style.opacity = '0';
     current = (current + 1) % vids.length;
-    vids[current].classList.add('hero__carousel-active');
+    vids[current].style.opacity = '1';
   }, 5000);
 })();
 

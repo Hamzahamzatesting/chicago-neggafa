@@ -4300,18 +4300,59 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
 
   /* ── Hide scroll cue — no room ── */
   .hero__scroll-cue { display: none !important; }
+}
 
-  /* ── Mobile hero carousel: stack all three videos in center panel ── */
-  .hero__arch-panel--center video {
+/* ═══════════════════════════════════════════════
+   MOBILE AUDIT FIXES
+   ═══════════════════════════════════════════════ */
+
+/* ── Gallery filter: larger tap targets on mobile ── */
+@media (max-width: 640px) {
+  .gallery__filter {
+    gap: 0 !important;
+    padding: 0 1rem !important;
+    justify-content: space-around !important;
+  }
+  .gfilter-btn {
+    min-height: 44px !important;
+    padding: 0.6rem 0.8rem !important;
+    font-size: 0.82rem !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+}
+
+/* ── Gallery items: always show caption on mobile, ensure tap works ── */
+@media (hover: none) {
+  .g-item__caption { opacity: 1 !important; transform: translateY(0) !important; }
+  .g-item { -webkit-tap-highlight-color: rgba(201,169,110,0.18); }
+}
+
+/* ── Lightbox: fix close button z-index on mobile ── */
+@media (max-width: 640px) {
+  .glightbox__close,
+  .glightbox__nav,
+  .glightbox__counter { z-index: 10001 !important; }
+  .glightbox__inner { padding: 0 3rem !important; }
+}
+
+/* ── About section: fix float image overlap on mobile ── */
+@media (max-width: 768px) {
+  .about__images { position: relative; }
+  .about__img-float {
     position: absolute !important;
-    inset: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-    opacity: 0 !important;
-    transition: opacity 1.2s ease !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 42% !important;
+    margin: 0 !important;
   }
-  .hero__arch-panel--center video.hero__carousel-active {
-    opacity: 1 !important;
+  .about__images { padding-bottom: 3rem; }
+}
+@media (max-width: 480px) {
+  .about__img-float {
+    position: static !important;
+    width: 55% !important;
+    margin: 0.8rem 0 0 auto !important;
   }
+  .about__images { padding-bottom: 0; }
 }
