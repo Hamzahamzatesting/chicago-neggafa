@@ -837,6 +837,45 @@ document.querySelectorAll('.hero__arch-panel video').forEach(v => {
   obs.observe(section);
 })();
 
+/* ─── HERO MOBILE: VIDEO CAROUSEL ─── */
+(function initHeroMobileCarousel() {
+  if (!window.matchMedia('(max-width: 640px)').matches) return;
+  const panel = document.querySelector('.hero__arch-panel--center');
+  if (!panel) return;
+
+  const mainVid = panel.querySelector('video');
+  if (!mainVid) return;
+
+  function makeVid(src) {
+    const v = document.createElement('video');
+    v.muted = true;
+    v.loop = true;
+    v.setAttribute('playsinline', '');
+    v.setAttribute('preload', 'auto');
+    v.innerHTML = `<source src="${src}" type="video/mp4">`;
+    return v;
+  }
+
+  const vid1 = makeVid('media/videos/video-chicago-neggafa-01.mp4');
+  const vid4 = makeVid('media/videos/video-chicago-neggafa-04.mp4');
+  const vignette = panel.querySelector('.hero__arch-vignette');
+
+  panel.insertBefore(vid1, mainVid);
+  panel.insertBefore(vid4, vignette || null);
+
+  const vids = [vid1, mainVid, vid4];
+  let current = 0;
+
+  vids[current].classList.add('hero__carousel-active');
+  vids.forEach(v => { v.muted = true; v.play().catch(() => {}); });
+
+  setInterval(() => {
+    vids[current].classList.remove('hero__carousel-active');
+    current = (current + 1) % vids.length;
+    vids[current].classList.add('hero__carousel-active');
+  }, 5000);
+})();
+
 /* ─── LHENNA: RISING EMBERS ─── */
 (function initEmbers() {
   const gallery = document.querySelector('.lhenna__gallery');

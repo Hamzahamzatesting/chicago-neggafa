@@ -2632,7 +2632,8 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
 
 /* ── Touch: show gallery captions always on touch devices ── */
 @media (hover: none) {
-  .g-item__caption { transform: translateY(0); }
+  .g-item__caption { transform: translateY(0); opacity: 1; }
+  .g-item { touch-action: manipulation; }
   .svc-card__img img { filter: brightness(0.75) saturate(0.9); }
   * { cursor: auto !important; }
   #cursor { display: none; }
@@ -4299,4 +4300,18 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
 
   /* ── Hide scroll cue — no room ── */
   .hero__scroll-cue { display: none !important; }
+
+  /* ── Mobile hero carousel: stack all three videos in center panel ── */
+  .hero__arch-panel--center video {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    opacity: 0 !important;
+    transition: opacity 1.2s ease !important;
+  }
+  .hero__arch-panel--center video.hero__carousel-active {
+    opacity: 1 !important;
+  }
 }
